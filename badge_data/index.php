@@ -219,37 +219,71 @@ foreach ($errorMessages as $message) {
 }
 
 ?>
+
+
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.min.js"></script>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <ul class="badges">
-                <?php foreach ($badges_detail as $badge_id => $badge) { ?>
-                    <li onclick="fillTextarea('<?= $badge_id ?>', this);">
-                        <a title="<?= $badge->issued['badge']['name'] ?>">
-                            <img src="<?= $badge->issued['badge']['image'] ?>" class="badge-image" alt="">
-                        </a>
-                        <span class="badge-name"><?= $badge->issued['badge']['name'] ?></span>
-                    </li>
-                <?php } ?>
-            </ul>
+    <div class="row justify-content-center mb-4">
+        <div class="col-8 text-center">
+            <p class="instruction-text">Push the buttons to get the invitation code or to issue the badge as credential.</p>
         </div>
+    </div>
+    <div class="row justify-content-center">
         <div class="col text-center">
-            <textarea class="w-100" id="JSON" readonly style="resize:both !important;height:300px;"></textarea>
-            <button id="run-curl-button" class="btn btn-primary mt-3 p-3" onclick="runCurl();">
+            <button id="run-curl-button" class="styled-button btn mt-3 p-3">
                 Connect to Holder Wallet
             </button>
-            <button id="issue-credential-button" class="btn btn-secondary mt-3 p-3" onclick="issueCredential();">
+            <button id="issue-credential-button" class="styled-button btn mt-3 p-3">
                 Issue Credential to Holder Wallet
             </button>
-            <div id="textarea-qr-code"></div> <!-- Leerer Container für den ersten QR-Code -->
-            <div id="qr-code"></div> <!-- Leerer Container für den zweiten QR-Code -->
+        </div>
+    </div>
+    <div class="row justify-content-center mt-5">
+        <div class="col text-center">
+            <textarea class="w-100" id="JSON" readonly style="resize:both !important;height:300px;"></textarea>
+            <div id="textarea-qr-code" class="qr-code-container"></div> 
+            <div id="qr-code" class="qr-code-container"></div> 
         </div>
     </div>
 </div>
 
-
 <style>
+    body {
+        background-color: #f7f7f7;
+        color: #333;
+        font-family: Arial, sans-serif;
+    }
+
+    .instruction-text {
+        font-size: 18px;
+        font-weight: 400;
+        color: #333;
+    }
+
+    .styled-button {
+        background-color: #f44336; 
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 15px 30px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .styled-button:hover {
+        background-color: #d32f2f;
+    }
+
+    /* QR-Code Container */
+    .qr-code-container {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #e0e0e0; 
+        border: 2px solid #f44336; 
+        display: inline-block;
+    }
+
     ul.badges li {
         cursor: pointer;
         border: 2px solid transparent;
@@ -258,7 +292,7 @@ foreach ($errorMessages as $message) {
 
     ul.badges li:hover,
     ul.badges li.selected {
-        border: 2px solid #0f6cbf;
+        border: 2px solid #f44336; 
     }
 
     #curl-result {
@@ -272,18 +306,25 @@ foreach ($errorMessages as $message) {
 
     .description-text {
         font-weight: bold;
-        display: block; /* sorgt dafür, dass der Text über dem QR-Code steht */
+        display: block;
         margin-bottom: 10px;
+        color: #f44336; 
     }
 
     .qr-code-box {
         border: 1px solid #ccc;
         padding: 10px;
-        background-color: #f9f9f9;
-        display: inline-block; /* passt die Größe des Containers an den Inhalt an */
+        background-color: #f7f7f7;
+        display: inline-block;
     }
-    
+
+    textarea {
+        border: 2px solid #f44336; 
+        background-color: #fff;
+        color: #333;
+    }
 </style>
+
 
 <script>
     var badgesData = <?php echo json_encode($JSON_badges); ?>;
